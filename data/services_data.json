@@ -16,5 +16,28 @@
       "args": null
     },
     "ExecuteDirectory": ""
+  },
+  {
+    "ID": "0514521d-ecfe-4324-8352-06cb0c79bc08",
+    "Name": "test",
+    "Cmd": {
+      "name": "ls",
+      "args": null
+    },
+    "ExecuteDirectory": ""
+  },
+  {
+    "ID": "57faa8e6-5ce0-425e-9d43-74e5ec258b71",
+    "Name": "Test Website",
+    "Cmd": {
+      "name": "npx",
+      "args": [
+        "serve",
+        ".",
+        "-l",
+        "3030"
+      ]
+    },
+    "ExecuteDirectory": ""
   }
 ]
