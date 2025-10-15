@@ -1,0 +1,16 @@
+DATA
+dataloader_test.ipynb
+dataset
+example.yaml
+general_test.ipynb
+main.py
+model
+output.mp4
+pyproject.toml
+README.md
+test.ipynb
+training
+training.ipynb
+utils
+uv.lock
+Z_TEST

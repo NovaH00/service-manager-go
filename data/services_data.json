@@ -1,0 +1,20 @@
+[
+  {
+    "ID": "19b81757-e4b0-4bac-b4b9-da4c26630da0",
+    "Name": "uv",
+    "Cmd": {
+      "name": "uv",
+      "args": null
+    },
+    "ExecuteDirectory": ""
+  },
+  {
+    "ID": "25c248de-4b3f-41b0-a81d-48d60592861c",
+    "Name": "test",
+    "Cmd": {
+      "name": "ls",
+      "args": null
+    },
+    "ExecuteDirectory": ""
+  }
+]

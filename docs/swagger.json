@@ -1,0 +1,417 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "An API for managing and monitoring background services.",
+        "title": "Service Manager API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "get the status of server.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/register": {
+            "post": {
+                "description": "Registers a new service with the service manager.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Register a new service",
+                "parameters": [
+                    {
+                        "description": "Service Registration",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.RegisterServiceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/remove": {
+            "post": {
+                "description": "Removes a service from the service manager.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Remove a service",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/services": {
+            "get": {
+                "description": "Retrieves a list of all registered services and their statuses.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Get all services",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/api.ServiceData"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/start": {
+            "post": {
+                "description": "Starts a registered service.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Start a service",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/stop": {
+            "post": {
+                "description": "Stops a running service.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Stop a service",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stream/stderr/{serviceID}": {
+            "get": {
+                "description": "Streams the standard error log of a service using Server-Sent Events (SSE).",
+                "produces": [
+                    "text/event-stream"
+                ],
+                "tags": [
+                    "stream"
+                ],
+                "summary": "Stream service stderr logs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Service ID",
+                        "name": "serviceID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SSE stream of log data",
+                        "schema": {
+                            "$ref": "#/definitions/api.StreamMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/stream/stdout/{serviceID}": {
+            "get": {
+                "description": "Streams the standard output log of a service using Server-Sent Events (SSE).",
+                "produces": [
+                    "text/event-stream"
+                ],
+                "tags": [
+                    "stream"
+                ],
+                "summary": "Stream service stdout logs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Service ID",
+                        "name": "serviceID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SSE stream of log data",
+                        "schema": {
+                            "$ref": "#/definitions/api.StreamMessage"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "error_message": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.RegisterServiceRequest": {
+            "type": "object",
+            "required": [
+                "command_name",
+                "service_name"
+            ],
+            "properties": {
+                "command_args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "command_name": {
+                    "type": "string"
+                },
+                "execute_directory": {
+                    "type": "string"
+                },
+                "service_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ServiceData": {
+            "type": "object",
+            "properties": {
+                "cmd": {
+                    "$ref": "#/definitions/manager.Command"
+                },
+                "execute_directory": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_running": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ServiceIDRequest": {
+            "type": "object",
+            "properties": {
+                "service_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.StreamEvent": {
+            "type": "string",
+            "enum": [
+                "event_initial",
+                "event_append",
+                "event_error"
+            ],
+            "x-enum-varnames": [
+                "EVENT_INITIAL",
+                "EVENT_APPEND",
+                "EVENT_ERROR"
+            ]
+        },
+        "api.StreamMessage": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "type": {
+                    "$ref": "#/definitions/api.StreamEvent"
+                }
+            }
+        },
+        "manager.Command": {
+            "type": "object",
+            "properties": {
+                "args": {
+                    "description": "Arguments is the arguments of the command",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "description": "Name is the name of the executable/binary",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
