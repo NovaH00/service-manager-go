@@ -192,9 +192,10 @@ func (sm *ServiceManager) updateServicesFile() error {
 
 	for _, service := range sm.services {
 		serviceData := serviceData{
-			ID:   service.ID,
-			Name: service.Name,
-			Cmd:  service.Cmd,
+			ID:               service.ID,
+			Name:             service.Name,
+			Cmd:              service.Cmd,
+			ExecuteDirectory: service.ExecuteDirectory,
 		}
 
 		servicesData = append(servicesData, serviceData)

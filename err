@@ -1,6 +1,0 @@
-> swag init -g cmd/server/main.go
-2025/10/14 20:38:50 Generate swagger docs....
-2025/10/14 20:38:50 Generate general API Info, search dir:./
-2025/10/14 20:38:50 warning: failed to get package name in dir: ./, error: execute go list command, exit status 1, stdout:, stderr:no Go files in C:\Users\NOVA\Projects\service-manager
-2025/10/14 20:38:50 Generating api.RegisterServiceRequest
-2025/10/14 20:38:50 ParseComment error in file C:\Users\NOVA\Projects\service-manager\internal\backend\handlers\manager.go for comment: '// @Failure      400      {object}  service-manager/internal/backend/api.Error': cannot find type definition: service-manager
