@@ -7,6 +7,13 @@ definitions:
       error_message:
         type: string
     type: object
+  api.NetworkInfo:
+    properties:
+      ip:
+        type: string
+      port:
+        type: integer
+    type: object
   api.RegisterServiceRequest:
     properties:
       command_args:
@@ -40,6 +47,15 @@ definitions:
     properties:
       service_id:
         type: string
+    type: object
+  api.ServiceMetrics:
+    properties:
+      cpu_percent:
+        type: number
+      ram_usage:
+        type: number
+      uptime:
+        type: integer
     type: object
   api.StreamEvent:
     enum:
@@ -91,6 +107,66 @@ paths:
       summary: Show the status of server.
       tags:
       - health
+  /manager/metrics:
+    post:
+      consumes:
+      - application/json
+      description: Get the metrics such as cpu percentage, ram usage and uptime.
+      parameters:
+      - description: Service ID
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/api.ServiceIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ServiceMetrics'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Get metrics of an service
+      tags:
+      - manager
+  /manager/network:
+    post:
+      consumes:
+      - application/json
+      description: Return info like ip address, port. May expand in the future
+      parameters:
+      - description: Service ID
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/api.ServiceIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.NetworkInfo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Get network information of a service
+      tags:
+      - manager
   /manager/register:
     post:
       consumes:
@@ -124,7 +200,7 @@ paths:
       tags:
       - manager
   /manager/remove:
-    post:
+    delete:
       consumes:
       - application/json
       description: Removes a service from the service manager.

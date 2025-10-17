@@ -39,6 +39,98 @@ const docTemplate = `{
                 }
             }
         },
+        "/manager/metrics": {
+            "post": {
+                "description": "Get the metrics such as cpu percentage, ram usage and uptime.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Get metrics of an service",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceMetrics"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/manager/network": {
+            "post": {
+                "description": "Return info like ip address, port. May expand in the future",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "manager"
+                ],
+                "summary": "Get network information of a service",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "name": "service",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.ServiceIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.NetworkInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/manager/register": {
             "post": {
                 "description": "Registers a new service with the service manager.",
@@ -89,7 +181,7 @@ const docTemplate = `{
             }
         },
         "/manager/remove": {
-            "post": {
+            "delete": {
                 "description": "Removes a service from the service manager.",
                 "consumes": [
                     "application/json"
@@ -329,6 +421,17 @@ const docTemplate = `{
                 }
             }
         },
+        "api.NetworkInfo": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                }
+            }
+        },
         "api.RegisterServiceRequest": {
             "type": "object",
             "required": [
@@ -378,6 +481,20 @@ const docTemplate = `{
             "properties": {
                 "service_id": {
                     "type": "string"
+                }
+            }
+        },
+        "api.ServiceMetrics": {
+            "type": "object",
+            "properties": {
+                "cpu_percent": {
+                    "type": "number"
+                },
+                "ram_usage": {
+                    "type": "number"
+                },
+                "uptime": {
+                    "type": "integer"
                 }
             }
         },
