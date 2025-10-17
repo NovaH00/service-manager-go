@@ -9,8 +9,10 @@ import (
 	"log"
 	"os/exec"
 	"sync"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/shirou/gopsutil/v3/process"
 )
 
 // service represents a command or process that is managed by the service manager.
@@ -20,6 +22,8 @@ type service struct {
 	Name             string
 	Cmd              Command
 	ExecuteDirectory string
+	pid              int
+	startTime        time.Time
 	status           ServiceStatus
 	stdoutHandler    func(service *service, line string)
 	stderrHandler    func(service *service, line string)
@@ -68,6 +72,54 @@ func (s *service) GetStatus() ServiceStatus {
 	return s.status
 }
 
+func (s *service) GetResourcesUsage() ResourcesData {
+	proc, err := process.NewProcess(int32(s.pid))
+	if err != nil {
+		return ResourcesData{
+			CPUPercent: 0.0,
+			RAMUsage:   0.0,
+		}
+	}
+	// We ignore errors since this doesn't affect service operation
+	CPUPercent, _ := proc.CPUPercent()
+	memInfo, _ := proc.MemoryInfo()
+
+	return ResourcesData{
+		CPUPercent: CPUPercent,
+		RAMUsage:   float64(memInfo.RSS) / 1024.0 / 1024.0,
+	}
+}
+
+func (s *service) GetUptime() int64 {
+	var zeroTime time.Time
+
+	// Service not started == uptime zero
+	if time.Time.Equal(s.startTime, zeroTime) {
+		return 0
+	}
+
+	return int64(time.Since(s.startTime).Seconds())
+}
+
+func (s *service) GetNetworkInfo() []NetworkInfo {
+	defaultNetworkInfo := []NetworkInfo{
+		{IP: "", Port: 0},
+	}
+
+	proc, err := process.NewProcess(int32(s.pid))
+	if err != nil {
+		return defaultNetworkInfo
+	}
+
+	res := collectNetworkInfoRecursive(proc)
+
+	if len(res) == 0 {
+		return defaultNetworkInfo
+	}
+
+	return res
+}
+
 func (s *service) executeCommand(ctx context.Context) error {
 	defer s.commandWaitGroup.Done()
 
@@ -75,7 +127,13 @@ func (s *service) executeCommand(ctx context.Context) error {
 	cmd.Dir = s.ExecuteDirectory
 
 	s.setStatus(SERVICE_RUNNING)
-	defer s.setStatus(SERVICE_STOPPED)
+	s.startTime = time.Now()
+
+	defer func() {
+		s.setStatus(SERVICE_STOPPED)
+		var zeroTime time.Time
+		s.startTime = zeroTime
+	}()
 
 	outReader, err := cmd.StdoutPipe()
 	if err != nil {
@@ -90,6 +148,9 @@ func (s *service) executeCommand(ctx context.Context) error {
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("start command: %w", err)
 	}
+
+	// Save pid to monitor resources usage
+	s.pid = cmd.Process.Pid
 
 	go killProcessOnCancel(ctx, s.Name, cmd.Process.Pid)
 

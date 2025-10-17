@@ -18,6 +18,16 @@ type ServiceManager struct {
 	readWriteMutex   sync.RWMutex
 }
 
+func (sm *ServiceManager) GetService(serviceID string) (*service, error) {
+	sm.readWriteMutex.RLock()
+	defer sm.readWriteMutex.RUnlock()
+	service, ok := sm.services[serviceID]
+	if !ok {
+		return service, fmt.Errorf("service not found")
+	}
+	return service, nil
+}
+
 func (sm *ServiceManager) GetServiceStatus(serviceID string) (ServiceStatus, error) {
 	sm.readWriteMutex.RLock()
 	defer sm.readWriteMutex.RUnlock()

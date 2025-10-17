@@ -21,3 +21,13 @@ type serviceData struct {
 	Cmd              Command
 	ExecuteDirectory string
 }
+
+type ResourcesData struct {
+	CPUPercent float64
+	RAMUsage   float64
+}
+
+type NetworkInfo struct {
+	IP   string
+	Port uint32
+}
