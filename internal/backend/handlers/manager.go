@@ -69,7 +69,7 @@ func (h *ServiceManagerHandler) RegisterService(c *gin.Context) {
 // @Success      200      {object}  map[string]string
 // @Failure      400      {object}  api.ErrorResponse
 // @Failure      500      {object}  api.ErrorResponse
-// @Router       /manager/remove [post]
+// @Router       /manager/remove [delete]
 func (h *ServiceManagerHandler) RemoveService(c *gin.Context) {
 	req, ok := helpers.BindOrAbort[api.ServiceIDRequest](c)
 	if !ok {
