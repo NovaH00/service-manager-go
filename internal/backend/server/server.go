@@ -11,6 +11,7 @@ import (
 	"service-manager/internal/manager"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,6 +33,7 @@ func NewServer(logsDir, servicesDataPath, host, port string) (*Server, error) {
 	}
 
 	router := gin.Default()
+	router.Use(cors.Default()) // Allow all origin
 	router.HandleMethodNotAllowed = true
 
 	routes.RegisterRoutes(router, serviceManager, logsDir)
