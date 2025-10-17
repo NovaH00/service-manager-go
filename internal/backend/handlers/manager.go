@@ -200,3 +200,84 @@ func (h *ServiceManagerHandler) GetServices(c *gin.Context) {
 		response,
 	)
 }
+
+// GetServiceMetrics godoc
+// @Summary      Get metrics of an service
+// @Description  Get the metrics such as cpu percentage, ram usage and uptime.
+// @Tags         manager
+// @Accept       json
+// @Produce      json
+// @Param        service  body      api.ServiceIDRequest  true  "Service ID"
+// @Success      200      {object}  api.ServiceMetrics
+// @Failure      400      {object}  api.ErrorResponse
+// @Failure      500      {object}  api.ErrorResponse
+// @Router       /manager/metrics [post]
+func (h *ServiceManagerHandler) GetServiceMetrics(c *gin.Context) {
+	req, ok := helpers.BindOrAbort[api.ServiceIDRequest](c)
+	if !ok {
+		return
+	}
+
+	service, err := h.ServiceManager.GetService(req.ServiceID)
+	if err != nil {
+		apiError := api.NewError(
+			"error fetching service",
+			err.Error(),
+		)
+
+		c.JSON(
+			http.StatusInternalServerError,
+			apiError,
+		)
+		return
+	}
+
+	serviceResourcesUsage := service.GetResourcesUsage()
+	serviceMetrics := api.ServiceMetrics{
+		Uptime:     service.GetUptime(),
+		CPUPercent: serviceResourcesUsage.CPUPercent,
+		RAMUsage:   serviceResourcesUsage.RAMUsage,
+	}
+
+	c.JSON(
+		http.StatusOK,
+		serviceMetrics,
+	)
+}
+
+// GetNetworkInfo godoc
+// @Summary      Get network information of a service
+// @Description  Return info like ip address, port. May expand in the future
+// @Tags         manager
+// @Accept       json
+// @Produce      json
+// @Param        service  body      api.ServiceIDRequest  true  "Service ID"
+// @Success      200      {object}  api.NetworkInfo
+// @Failure      400      {object}  api.ErrorResponse
+// @Failure      500      {object}  api.ErrorResponse
+// @Router       /manager/network [post]
+func (h *ServiceManagerHandler) GetNetworkInfo(c *gin.Context) {
+	req, ok := helpers.BindOrAbort[api.ServiceIDRequest](c)
+	if !ok {
+		return
+	}
+
+	service, err := h.ServiceManager.GetService(req.ServiceID)
+	if err != nil {
+		apiError := api.NewError(
+			"error fetching service",
+			err.Error(),
+		)
+
+		c.JSON(
+			http.StatusInternalServerError,
+			apiError,
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		service.GetNetworkInfo(),
+	)
+}

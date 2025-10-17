@@ -17,6 +17,8 @@ func RegisterServiceManagerRoutes(router *gin.Engine, sm *manager.ServiceManager
 		serviceManagerGroup.POST("/start", handler.StartService)
 		serviceManagerGroup.POST("/stop", handler.StopService)
 		serviceManagerGroup.DELETE("/remove", handler.RemoveService)
+		serviceManagerGroup.POST("/metrics", handler.GetServiceMetrics)
+		serviceManagerGroup.POST("/network", handler.GetNetworkInfo)
 	}
 
 }
