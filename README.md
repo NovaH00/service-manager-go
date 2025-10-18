@@ -21,7 +21,7 @@ A RESTful API built with Go and Gin for managing and monitoring background servi
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/service-manager-go.git
+   git clone https://github.com/NovaH00/service-manager-go.git
    ```
 2. Navigate to the project directory:
     ```sh
