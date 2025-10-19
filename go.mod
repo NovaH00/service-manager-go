@@ -1,11 +1,12 @@
 module service-manager
 
-go 1.25.1
+go 1.25.3
 
 require github.com/google/uuid v1.6.0
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/NovaH00/go-process v0.0.0-20251018093540-3b8ecfb3a9cd // indirect
 	github.com/PuerkitoBio/purell v1.2.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/bytedance/gopkg v0.1.3 // indirect
