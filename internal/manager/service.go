@@ -8,7 +8,6 @@ import (
 	"io"
 	"log"
 	"os/exec"
-	"runtime"
 	"sync"
 	"syscall"
 	"time"
@@ -128,9 +127,6 @@ func (s *service) executeCommand(ctx context.Context) error {
 
 	cmd := exec.Command(s.Cmd.Name, s.Cmd.Arguments...)
 	cmd.Dir = s.ExecuteDirectory
-	if runtime.GOOS != "window" {
-		panic("fix this start to process in a new group")
-	}
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		CreationFlags: windows.CREATE_NEW_PROCESS_GROUP,
 	}
