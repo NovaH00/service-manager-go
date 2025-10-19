@@ -16,9 +16,9 @@ func RegisterRoutes(router *gin.Engine, sm *manager.ServiceManager, logsDir stri
 	RegisterServiceManagerRoutes(router, sm)
 	RegisterStreamRoutes(router, sm, logsDir)
 
-	// Redirect /docs to /docs/index.html
+	// Redirect /docs to /docs/
 	router.GET("/docs", func(c *gin.Context) {
-		c.Redirect(301, "/docs/index.html")
+		c.Redirect(301, "/docs/")
 	})
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
