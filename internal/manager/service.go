@@ -128,7 +128,8 @@ func (s *service) executeCommand(ctx context.Context) error {
 	cmd := exec.Command(s.Cmd.Name, s.Cmd.Arguments...)
 	cmd.Dir = s.ExecuteDirectory
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		CreationFlags: windows.CREATE_NEW_PROCESS_GROUP | windows.DETACHED_PROCESS,
+		CreationFlags:    windows.CREATE_NEW_PROCESS_GROUP | windows.DETACHED_PROCESS,
+		NoInheritHandles: true,
 	}
 
 	s.setStatus(SERVICE_RUNNING)
