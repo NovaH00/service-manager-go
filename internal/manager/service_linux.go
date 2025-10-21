@@ -1,3 +1,5 @@
+//go:build linux
+
 package manager
 
 import (
@@ -14,7 +16,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/shirou/gopsutil/v3/process"
-	"golang.org/x/sys/windows"
 )
 
 // service represents a command or process that is managed by the service manager.
@@ -128,8 +129,7 @@ func (s *service) executeCommand(ctx context.Context) error {
 	cmd := exec.Command(s.Cmd.Name, s.Cmd.Arguments...)
 	cmd.Dir = s.ExecuteDirectory
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		CreationFlags:    windows.CREATE_NEW_PROCESS_GROUP | windows.DETACHED_PROCESS,
-		NoInheritHandles: true,
+		Setpgid: true,
 	}
 
 	s.setStatus(SERVICE_RUNNING)
